@@ -12,7 +12,7 @@ const Kontak = () => {
           <div className="bg-white p-10 rounded-[40px] shadow-sm border border-slate-100">
             <h2 className="text-sm font-black text-red-600 uppercase tracking-widest mb-4">Marketing Hotline</h2>
             <p className="text-3xl font-black text-slate-900 mb-6">{COMPANY_INFO.phone}</p>
-            <a href={`https://wa.me/${COMPANY_INFO.phone.replace(/-/g, '')}`} className="inline-block w-full py-4 bg-green-500 text-white text-center rounded-2xl font-bold shadow-lg shadow-green-100 hover:bg-green-600 transition-all">
+            <a href={`https://wa.me/${COMPANY_INFO.phone.replace(/-/g, '').replace(/^0/, '62')}`} className="inline-block w-full py-4 bg-green-500 text-white text-center rounded-2xl font-bold shadow-lg shadow-green-100 hover:bg-green-600 transition-all">
               Chat WhatsApp
             </a>
           </div>
