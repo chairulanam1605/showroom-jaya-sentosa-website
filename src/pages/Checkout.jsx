@@ -190,7 +190,6 @@ const Checkout = () => {
               <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest block mb-2">Pilih Tenor Angsuran</label>
               <select name="tenorAngsuran" required onChange={handleInputChange} className="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-red-600 outline-none cursor-pointer">
                 <option value="">-- Pilih Angsuran --</option>
-                <option value="Cash">Beli Tunai / Cash (Bayar DP Saja: Rp {motor.dp})</option>
                 {motor.installments && Object.entries(motor.installments).map(([bln, rp]) => (
                   <option key={bln} value={bln}>
                     {bln} Bulan - Rp {rp} / bulan
