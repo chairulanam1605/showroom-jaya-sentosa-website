@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { db } from "../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
-import { COMPANY_INFO } from "../constants/data";
+// COMPANY_INFO tetap di-import barangkali nanti butuh data lain, 
+// meski nomor WA sudah dipindah ke tahap selanjutnya.
+import { COMPANY_INFO } from "../constants/data"; 
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -91,13 +93,13 @@ const ProductDetail = () => {
                 ))}
             </div>
 
-            <a
-              // Perhatikan tambahan .replace(/^0/, '62') di bawah ini
-              href={`https://wa.me/${COMPANY_INFO.phone.replace(/-/g, "").replace(/^0/, "62")}?text=Halo Marketing Jaya Sentosa, saya tertarik dengan motor ${motor.type}. Boleh tanya prosesnya?`}
+            {/* Tombol yang sudah dimodifikasi untuk pindah ke halaman Checkout */}
+            <button
+              onClick={() => navigate(`/checkout/${id}`)}
               className="inline-flex items-center justify-center w-full py-5 bg-red-600 text-white rounded-3xl font-black text-lg shadow-2xl shadow-red-200 hover:bg-red-700 transition-all hover:-translate-y-1"
             >
-              Pesan Sekarang via WhatsApp
-            </a>
+              Beli Online Sekarang
+            </button>
           </div>
         </div>
       </div>

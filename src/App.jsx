@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// 1. Cukup import saja, jangan mendefinisikan ulang di sini
+// 1. Import Komponen dan Halaman
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -10,6 +10,11 @@ import Syarat from "./pages/Syarat";
 import Kontak from "./pages/Kontak";
 import ProductDetail from './pages/ProductDetail';
 
+// 2. Import Halaman Baru Checkout
+import Checkout from './pages/Checkout'; 
+
+// 3. Import Data Statis (PENTING: Agar tombol WA di dalam Modal tidak error)
+import { COMPANY_INFO } from "./constants/data";
 
 function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -27,6 +32,10 @@ function App() {
             element={<Katalog onOpenDetail={(m) => setSelectedProduct(m)} />}
           />
           <Route path="/product/:id" element={<ProductDetail />} />
+          
+          {/* RUTE BARU: Halaman Checkout / Formulir Pembelian */}
+          <Route path="/checkout/:id" element={<Checkout />} />
+          
           <Route path="/syarat" element={<Syarat />} />
           <Route path="/kontak" element={<Kontak />} />
         </Routes>
