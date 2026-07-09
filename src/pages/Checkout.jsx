@@ -22,7 +22,13 @@ const Checkout = () => {
     tenorAngsuran: ''
   });
 
-  // Ambil data motor berdasarkan ID
+  // State untuk API Wilayah
+  const [provinces, setProvinces] = useState([]);
+  const [regencies, setRegencies] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [villages, setVillages] = useState([]);
+
+  // Ambil data motor dari Firebase
   useEffect(() => {
     const getProduct = async () => {
       const docRef = doc(db, "motors", id);
@@ -35,19 +41,82 @@ const Checkout = () => {
     getProduct();
   }, [id]);
 
+  // Fetch daftar Provinsi saat halaman pertama kali dimuat
+  useEffect(() => {
+    fetch('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
+      .then((response) => response.json())
+      .then((data) => setProvinces(data))
+      .catch((error) => console.error("Error fetching provinces:", error));
+  }, []);
+
+  // Handler Input Data Umum (Nama, NIK, Alamat Lengkap, dll)
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleLanjut = (e) => {
-    e.preventDefault();
-    // Nanti kita akan arahkan ini ke halaman Upload KTP/KK atau Ringkasan Midtrans
-    console.log("Data Pembeli:", formData);
-    alert("Data berhasil disimpan sementara! Lanjut ke tahap berikutnya.");
+  // Handler khusus untuk API Wilayah agar data yang disimpan adalah NAMA daerah, bukan ID-nya
+  const handleProvinsiChange = (e) => {
+    const idProv = e.target.value;
+    const nameProv = e.target.options[e.target.selectedIndex].text;
+    setFormData({ ...formData, provinsi: nameProv, kabupaten: '', kecamatan: '', desa: '' });
+    
+    // Reset dropdown bawahnya
+    setRegencies([]);
+    setDistricts([]);
+    setVillages([]);
+
+    // Fetch Kabupaten berdasarkan ID Provinsi
+    if(idProv) {
+      fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${idProv}.json`)
+        .then((res) => res.json())
+        .then((data) => setRegencies(data));
+    }
   };
 
-  if (loading) return <div className="pt-40 text-center">Menyiapkan form pembelian...</div>;
-  if (!motor) return <div className="pt-40 text-center">Motor tidak ditemukan.</div>;
+  const handleKabupatenChange = (e) => {
+    const idKab = e.target.value;
+    const nameKab = e.target.options[e.target.selectedIndex].text;
+    setFormData({ ...formData, kabupaten: nameKab, kecamatan: '', desa: '' });
+    
+    setDistricts([]);
+    setVillages([]);
+
+    if(idKab) {
+      fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${idKab}.json`)
+        .then((res) => res.json())
+        .then((data) => setDistricts(data));
+    }
+  };
+
+  const handleKecamatanChange = (e) => {
+    const idKec = e.target.value;
+    const nameKec = e.target.options[e.target.selectedIndex].text;
+    setFormData({ ...formData, kecamatan: nameKec, desa: '' });
+    
+    setVillages([]);
+
+    if(idKec) {
+      fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${idKec}.json`)
+        .then((res) => res.json())
+        .then((data) => setVillages(data));
+    }
+  };
+
+  const handleDesaChange = (e) => {
+    const nameDesa = e.target.options[e.target.selectedIndex].text;
+    setFormData({ ...formData, desa: nameDesa });
+  };
+
+  // Lanjut ke tahap berikutnya
+  const handleLanjut = (e) => {
+    e.preventDefault();
+    console.log("Data Pembeli:", formData);
+    alert("Data berhasil disimpan sementara! Lanjut ke tahap pembayaran (Midtrans).");
+    // Nanti kita tambahkan rute untuk menuju Ringkasan & Pembayaran Midtrans di sini
+  };
+
+  if (loading) return <div className="pt-40 text-center text-slate-500 font-bold animate-pulse">Menyiapkan form pembelian...</div>;
+  if (!motor) return <div className="pt-40 text-center font-bold text-red-600">Motor tidak ditemukan.</div>;
 
   return (
     <div className="pt-32 pb-24 px-6 min-h-screen bg-slate-50">
@@ -78,22 +147,48 @@ const Checkout = () => {
               <input type="number" name="whatsapp" required placeholder="Contoh: 08123456789" onChange={handleInputChange} className="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-red-600 outline-none" />
             </div>
 
-            {/* Area Dropdown Alamat (Sementara Pakai Text Input, Nanti Kita Beri API) */}
+            {/* Area Dropdown Alamat dengan API Wilayah */}
             <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
               <h3 className="text-sm font-black uppercase tracking-widest text-slate-900 mb-4">Alamat Pengiriman</h3>
               <div className="grid md:grid-cols-2 gap-4">
-                <input type="text" name="provinsi" placeholder="Provinsi" required onChange={handleInputChange} className="w-full bg-white border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-700 outline-none" />
-                <input type="text" name="kabupaten" placeholder="Kabupaten/Kota" required onChange={handleInputChange} className="w-full bg-white border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-700 outline-none" />
-                <input type="text" name="kecamatan" placeholder="Kecamatan" required onChange={handleInputChange} className="w-full bg-white border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-700 outline-none" />
-                <input type="text" name="desa" placeholder="Desa/Kelurahan" required onChange={handleInputChange} className="w-full bg-white border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-700 outline-none" />
+                
+                <select required onChange={handleProvinsiChange} className="w-full bg-white border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-700 outline-none cursor-pointer">
+                  <option value="">-- Pilih Provinsi --</option>
+                  {provinces.map(prov => (
+                    <option key={prov.id} value={prov.id}>{prov.name}</option>
+                  ))}
+                </select>
+
+                <select required onChange={handleKabupatenChange} disabled={regencies.length === 0} className="w-full bg-white border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-700 outline-none cursor-pointer disabled:opacity-50">
+                  <option value="">-- Pilih Kabupaten/Kota --</option>
+                  {regencies.map(kab => (
+                    <option key={kab.id} value={kab.id}>{kab.name}</option>
+                  ))}
+                </select>
+
+                <select required onChange={handleKecamatanChange} disabled={districts.length === 0} className="w-full bg-white border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-700 outline-none cursor-pointer disabled:opacity-50">
+                  <option value="">-- Pilih Kecamatan --</option>
+                  {districts.map(kec => (
+                    <option key={kec.id} value={kec.id}>{kec.name}</option>
+                  ))}
+                </select>
+
+                <select required onChange={handleDesaChange} disabled={villages.length === 0} className="w-full bg-white border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-700 outline-none cursor-pointer disabled:opacity-50">
+                  <option value="">-- Pilih Desa/Kelurahan --</option>
+                  {villages.map(desa => (
+                    <option key={desa.id} value={desa.id}>{desa.name}</option>
+                  ))}
+                </select>
               </div>
+
+              {/* Input manual untuk jalan, RT/RW, dll */}
               <textarea name="alamatLengkap" required placeholder="Alamat lengkap (Nama jalan, RT/RW, Patokan)" rows="3" onChange={handleInputChange} className="w-full bg-white border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-700 outline-none mt-4"></textarea>
             </div>
 
             {/* Pilihan Angsuran */}
             <div>
               <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest block mb-2">Pilih Tenor Angsuran</label>
-              <select name="tenorAngsuran" required onChange={handleInputChange} className="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-red-600 outline-none">
+              <select name="tenorAngsuran" required onChange={handleInputChange} className="w-full bg-slate-50 border-none rounded-xl px-4 py-3 text-sm font-bold text-slate-700 focus:ring-2 focus:ring-red-600 outline-none cursor-pointer">
                 <option value="">-- Pilih Angsuran --</option>
                 <option value="Cash">Beli Tunai / Cash (Bayar DP Saja: Rp {motor.dp})</option>
                 {motor.installments && Object.entries(motor.installments).map(([bln, rp]) => (
@@ -105,7 +200,7 @@ const Checkout = () => {
             </div>
 
             <button type="submit" className="w-full py-5 bg-slate-900 text-white rounded-2xl font-black uppercase text-sm tracking-widest hover:bg-red-600 transition-all shadow-lg hover:-translate-y-1 mt-8">
-              Lanjut ke Upload Dokumen
+              Lanjut Proses Pembayaran
             </button>
           </form>
         </div>
