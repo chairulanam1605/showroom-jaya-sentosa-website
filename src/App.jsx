@@ -9,6 +9,7 @@ import Katalog from "./pages/Katalog";
 import Syarat from "./pages/Syarat";
 import Kontak from "./pages/Kontak";
 import ProductDetail from './pages/ProductDetail';
+import Ringkasan from './pages/Ringkasan';
 
 // 2. Import Halaman Baru Checkout
 import Checkout from './pages/Checkout'; 
@@ -35,7 +36,7 @@ function App() {
           
           {/* RUTE BARU: Halaman Checkout / Formulir Pembelian */}
           <Route path="/checkout/:id" element={<Checkout />} />
-          
+          <Route path="/ringkasan" element={<Ringkasan />} />
           <Route path="/syarat" element={<Syarat />} />
           <Route path="/kontak" element={<Kontak />} />
         </Routes>

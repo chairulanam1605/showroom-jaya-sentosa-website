@@ -108,11 +108,11 @@ const Checkout = () => {
   };
 
   // Lanjut ke tahap berikutnya
+  // Lanjut ke tahap berikutnya
   const handleLanjut = (e) => {
     e.preventDefault();
-    console.log("Data Pembeli:", formData);
-    alert("Data berhasil disimpan sementara! Lanjut ke tahap pembayaran (Midtrans).");
-    // Nanti kita tambahkan rute untuk menuju Ringkasan & Pembayaran Midtrans di sini
+    // Membawa formData dan data motor ke halaman Ringkasan
+    navigate('/ringkasan', { state: { pembeli: formData, motor: motor } });
   };
 
   if (loading) return <div className="pt-40 text-center text-slate-500 font-bold animate-pulse">Menyiapkan form pembelian...</div>;
