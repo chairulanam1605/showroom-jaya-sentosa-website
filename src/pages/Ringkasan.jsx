@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { db } from '../firebaseConfig'; // <-- Tambahan Import Firebase
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; // <-- Tambahan fungsi Firestore
 
 const Ringkasan = () => {
   const location = useLocation();
@@ -10,7 +12,7 @@ const Ringkasan = () => {
 
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Jika tidak ada data (misal pengunjung langsung mengetik URL /ringkasan), kembalikan ke beranda
+  // Jika tidak ada data, kembalikan ke beranda
   if (!pembeli || !motor) {
     return (
       <div className="pt-40 text-center text-slate-500 font-bold">
@@ -20,18 +22,15 @@ const Ringkasan = () => {
     );
   }
 
-  // --- FUNGSI UNTUK MEMUNCULKAN MIDTRANS SNAP (VERSI VERCEL API) ---
+  // --- FUNGSI UNTUK MEMUNCULKAN MIDTRANS SNAP (VERSI VERCEL API + FIRESTORE) ---
   const handleBayarMidtrans = async () => {
     setIsProcessing(true);
     
     try {
-      // 1. Membersihkan format angka (menghilangkan titik pada nominal DP)
       const nominalDP = parseInt(motor.dp.replace(/\./g, ''));
-
-      // 2. Membuat Order ID unik dengan Prefix khusus agar tidak bentrok dengan aplikasimu yang lain
       const orderIdUnik = "JSG-ORD-" + Date.now();
 
-      // 3. Menghubungi API Serverless Vercel yang sudah kita buat
+      // Menghubungi API Serverless Vercel
       const response = await fetch('/api/payment', {
         method: 'POST',
         headers: {
@@ -51,10 +50,28 @@ const Ringkasan = () => {
         throw new Error(data.error || "Gagal mendapatkan token dari server");
       }
 
-      // 4. Memunculkan pop-up Midtrans menggunakan token asli dari Vercel
+      // Memunculkan pop-up Midtrans
       window.snap.pay(data.token, {
-        onSuccess: function(result){
-          alert("Pembayaran Berhasil! Silakan unggah KTP/KK untuk finalisasi.");
+        onSuccess: async function(result){
+          try {
+            // JIKA SUKSES BAYAR, SIMPAN DATA KE FIRESTORE
+            await addDoc(collection(db, "orders"), {
+              order_id: orderIdUnik,
+              pembeli: pembeli,
+              motor: motor,
+              metode_pembayaran: "Midtrans Otomatis",
+              status_pembayaran: "Lunas (DP)",
+              status_pesanan: "Menunggu Diproses Admin",
+              tanggal_pesanan: serverTimestamp()
+            });
+
+            alert("Pembayaran Berhasil! Pesanan Anda telah masuk ke sistem kami. Admin akan segera menghubungi Anda.");
+            navigate('/'); // Kembali ke Home setelah sukses
+
+          } catch (error) {
+            console.error("Gagal simpan ke DB:", error);
+            alert("Pembayaran berhasil, namun terjadi kendala menyimpan ke database. Mohon simpan bukti pembayaran Anda.");
+          }
         },
         onPending: function(result){
           alert("Menunggu pembayaran Anda diselesaikan!");
@@ -75,11 +92,31 @@ const Ringkasan = () => {
     }
   };
 
-  // Fungsi Finalisasi (Upload Dokumen Manual)
-  const handleFinalisasi = (e) => {
+  // --- Fungsi Finalisasi (Upload Dokumen Manual) ---
+  const handleFinalisasi = async (e) => {
     e.preventDefault();
-    alert("Pesanan berhasil dibuat! Admin Jaya Sentosa akan segera menghubungi Anda via WhatsApp.");
-    navigate('/'); // Kembali ke Home
+    setIsProcessing(true);
+
+    try {
+      // SIMPAN DATA KE FIRESTORE DENGAN STATUS "MANUAL"
+      await addDoc(collection(db, "orders"), {
+        order_id: "JSG-MANUAL-" + Date.now(),
+        pembeli: pembeli,
+        motor: motor,
+        metode_pembayaran: "Transfer Manual",
+        status_pembayaran: "Menunggu Verifikasi Bukti Transfer",
+        status_pesanan: "Menunggu Diproses Admin",
+        tanggal_pesanan: serverTimestamp()
+      });
+
+      alert("Pesanan berhasil dibuat! Admin Jaya Sentosa akan segera menghubungi Anda via WhatsApp.");
+      navigate('/'); // Kembali ke Home
+    } catch (error) {
+      console.error("Gagal simpan ke DB manual:", error);
+      alert("Gagal membuat pesanan. Silakan coba lagi nanti.");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -157,8 +194,12 @@ const Ringkasan = () => {
                 <input type="file" className="w-full text-xs font-medium text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer" />
               </div>
 
-              <button type="submit" className="w-full py-4 bg-green-500 text-white rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-green-600 transition-all shadow-lg hover:-translate-y-1 mt-6">
-                Proses Pesanan Sekarang
+              <button 
+                type="submit" 
+                disabled={isProcessing}
+                className="w-full py-4 bg-green-500 text-white rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-green-600 transition-all shadow-lg hover:-translate-y-1 mt-6 disabled:opacity-50"
+              >
+                {isProcessing ? 'Memproses...' : 'Proses Pesanan Sekarang'}
               </button>
             </form>
           </div>
