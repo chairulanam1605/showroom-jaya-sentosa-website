@@ -2,6 +2,8 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth"; // <-- 1. Tambahan Import Modul Auth
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -21,4 +23,4 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 const analytics = getAnalytics(app);
-
+export const auth = getAuth(app); // <-- 2. Tambahan Export Auth agar bisa dipakai di Admin.jsx
