@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { db } from '../firebaseConfig';
+import { db } from '../../firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 
 const Checkout = () => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { COMPANY_INFO } from '../constants/data';
+import { COMPANY_INFO } from '../../constants/data';
 
 const Syarat = () => {
   return (

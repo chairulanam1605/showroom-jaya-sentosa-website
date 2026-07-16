@@ -1,21 +1,24 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-// 1. Import Komponen dan Halaman
+// 1. Import Komponen dan Layout
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Home from "./pages/Home";
-import Katalog from "./pages/Katalog";
-import Syarat from "./pages/Syarat";
-import Kontak from "./pages/Kontak";
-import ProductDetail from './pages/ProductDetail';
-import Ringkasan from './pages/Ringkasan';
-import Admin from './pages/Admin';
 
-// 2. Import Halaman Baru Checkout
-import Checkout from './pages/Checkout'; 
+// 2. Import Halaman Pelanggan (dari folder pelanggan)
+import Home from "./pages/pelanggan/Home";
+import Katalog from "./pages/pelanggan/Katalog";
+import Syarat from "./pages/pelanggan/Syarat";
+import Kontak from "./pages/pelanggan/Kontak";
+import ProductDetail from './pages/pelanggan/ProductDetail';
+import Checkout from './pages/pelanggan/Checkout'; 
+import Ringkasan from './pages/pelanggan/Ringkasan';
 
-// 3. Import Data Statis (PENTING: Agar tombol WA di dalam Modal tidak error)
+// 3. Import Halaman Admin (dari folder admin)
+import DataOrder from './pages/admin/DataOrder';
+import DataMotor from './pages/admin/DataMotor';
+
+// 4. Import Data Statis (PENTING: Agar tombol WA di dalam Modal tidak error)
 import { COMPANY_INFO } from "./constants/data";
 
 function App() {
@@ -28,19 +31,23 @@ function App() {
         <Navbar />
 
         <Routes>
+          {/* RUTE WEBSITE PELANGGAN */}
           <Route path="/" element={<Home />} />
           <Route
             path="/katalog"
             element={<Katalog onOpenDetail={(m) => setSelectedProduct(m)} />}
           />
           <Route path="/product/:id" element={<ProductDetail />} />
-          
-          {/* RUTE BARU: Halaman Checkout / Formulir Pembelian */}
           <Route path="/checkout/:id" element={<Checkout />} />
           <Route path="/ringkasan" element={<Ringkasan />} />
           <Route path="/syarat" element={<Syarat />} />
           <Route path="/kontak" element={<Kontak />} />
-          <Route path="/admin-jsg" element={<Admin />} />
+
+          {/* RUTE AREA ADMIN */}
+          {/* Jika buka /admin-jsg otomatis dilempar ke /admin-jsg/order */}
+          <Route path="/admin-jsg" element={<Navigate to="/admin-jsg/order" replace />} />
+          <Route path="/admin-jsg/order" element={<DataOrder />} />
+          <Route path="/admin-jsg/motor" element={<DataMotor />} />
         </Routes>
 
         {/* Menggunakan komponen Footer dari file /components/Footer.jsx */}

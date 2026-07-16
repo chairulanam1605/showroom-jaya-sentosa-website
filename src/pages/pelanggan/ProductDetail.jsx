@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { db } from "../firebaseConfig";
+import { db } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 // COMPANY_INFO tetap di-import barangkali nanti butuh data lain, 
 // meski nomor WA sudah dipindah ke tahap selanjutnya.
-import { COMPANY_INFO } from "../constants/data"; 
+import { COMPANY_INFO } from "../../constants/data"; 
 
 const ProductDetail = () => {
   const { id } = useParams();

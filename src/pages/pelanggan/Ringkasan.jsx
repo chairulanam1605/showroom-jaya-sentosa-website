@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { db } from '../firebaseConfig'; // <-- Tambahan Import Firebase
+import { db } from '../../firebaseConfig'; // <-- Tambahan Import Firebase
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; // <-- Tambahan fungsi Firestore
 
 const Ringkasan = () => {

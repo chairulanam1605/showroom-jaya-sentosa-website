@@ -12,8 +12,8 @@ const Navbar = () => {
     { name: 'Kontak', path: '/kontak' },
   ];
 
-  // Mendeteksi apakah pengguna sedang berada di halaman rahasia Admin
-  const isAdminPage = location.pathname === '/admin-jsg';
+  // PERUBAHAN DI SINI: Mendeteksi apakah URL mengandung "/admin-jsg" di depannya
+  const isAdminPage = location.pathname.startsWith('/admin-jsg');
 
   return (
     <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-slate-100 min-h-20 flex flex-col justify-center transition-all duration-300">
