@@ -10,6 +10,7 @@ import Syarat from "./pages/Syarat";
 import Kontak from "./pages/Kontak";
 import ProductDetail from './pages/ProductDetail';
 import Ringkasan from './pages/Ringkasan';
+import Admin from './pages/Admin';
 
 // 2. Import Halaman Baru Checkout
 import Checkout from './pages/Checkout'; 
@@ -39,6 +40,7 @@ function App() {
           <Route path="/ringkasan" element={<Ringkasan />} />
           <Route path="/syarat" element={<Syarat />} />
           <Route path="/kontak" element={<Kontak />} />
+          <Route path="/admin-jsg" element={<Admin />} />
         </Routes>
 
         {/* Menggunakan komponen Footer dari file /components/Footer.jsx */}
