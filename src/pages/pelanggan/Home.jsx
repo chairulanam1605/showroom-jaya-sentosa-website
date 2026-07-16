@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MOTORS, COMPANY_INFO } from '../../constants/data';
 // IMPORT FOTO: Pastikan nama file di bawah ini sesuai dengan nama file foto di folder assets abang
-import FotoHero from '../assets/foto.jpeg'; 
+import FotoHero from '../../assets/foto.jpeg'; 
 
 const Home = () => {
   const featured = MOTORS.slice(0, 3); // Ambil 3 motor untuk ringkasan
