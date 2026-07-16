@@ -26,10 +26,10 @@ const DataMotor = () => {
     image: '', 
     installments: {
       '11': '',
-      '17': '',
       '23': '',
       '29': '',
-      '35': ''
+      '35': '',
+      '47': '',
     }
   });
 
@@ -85,10 +85,10 @@ const DataMotor = () => {
         // Mengambil isi Map installments dari Firestore, jika kosong diberi string kosong
         installments: {
           '11': m.installments?.['11'] || '',
-          '17': m.installments?.['17'] || '',
           '23': m.installments?.['23'] || '',
           '29': m.installments?.['29'] || '',
-          '35': m.installments?.['35'] || ''
+          '35': m.installments?.['35'] || '',
+          '47': m.installments?.['47'] || ''
         }
       }); 
     } else { 
@@ -99,7 +99,7 @@ const DataMotor = () => {
         price: '', 
         dp: '', 
         image: '', 
-        installments: { '11': '', '17': '', '23': '', '29': '', '35': '' } 
+        installments: { '11': '', '23': '', '29': '', '35': '', '47': '' } 
       }); 
     }
     setShowModal(true);
@@ -246,7 +246,7 @@ const DataMotor = () => {
                 <div className="col-span-2 border-t border-slate-100 pt-5 mt-2">
                   <h3 className="text-xs font-black uppercase text-slate-900 tracking-widest mb-4 italic text-red-600">Simulasi Angsuran (Rp / Bulan)</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    {['11', '17', '23', '29', '35'].map((tenor) => (
+                    {['11', '23', '29', '35', '47'].map((tenor) => (
                       <div key={tenor} className="bg-slate-50 p-3 rounded-2xl border border-slate-100">
                         <label className="text-[10px] font-black uppercase text-slate-400 tracking-wider block mb-1.5">{tenor} Bulan</label>
                         <input 
