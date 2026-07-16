@@ -226,7 +226,6 @@ const DataMotor = () => {
                     <option value="matic">Matic</option>
                     <option value="sport">Sport</option>
                     <option value="bebek">Bebek</option>
-                    <option value="ev">EV / Listrik</option>
                   </select>
                 </div>
                 <div className="col-span-2 sm:col-span-1">
