@@ -55,7 +55,7 @@ const Home = () => {
           <div className="p-8 bg-slate-900 text-white rounded-[40px]">
             <h3 className="text-2xl font-bold mb-4">Syarat Mudah</h3>
             <p className="text-slate-400 mb-6 italic">Cukup KTP & KK, proses survei cepat.</p>
-            <Link to="/syarat" className="bg-white text-red-500 font-bold uppercase text-xs tracking-widest">Baca Selengkapnya</Link>
+            <Link to="/syarat" className="px-12 py-3bg-white rounded-xl text-red-500 font-bold uppercase text-xs tracking-widest">Baca Selengkapnya</Link>
           </div>
           <div className="p-8 bg-red-600 text-white rounded-[40px]">
             <h3 className="text-2xl font-bold mb-4">Hubungi Kami</h3>
