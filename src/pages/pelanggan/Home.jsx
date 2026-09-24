@@ -16,7 +16,7 @@ const Home = () => {
             <h1 className="text-6xl font-black leading-tight mb-6 text-slate-900">
               GASKEUN <br/> <span className="text-red-600">MOTOR BARU.</span>
             </h1>
-            <p className="text-lg text-slate-500 mb-8">Showroom Jaya Sentosa: Dealer Honda terpercaya di Kebumen.</p>
+            <p className="text-lg text-slate-500 mb-8">Showroom Jaya Sentosa: Dealer motor terpercaya di Kebumen.</p>
             <Link to="/katalog" className="inline-flex items-center gap-3 px-8 py-4 bg-red-600 text-white rounded-2xl font-bold hover:bg-red-700 transition-all shadow-lg shadow-red-200 hover:-translate-y-1">
               Cek Katalog Terbaru
             </Link>
