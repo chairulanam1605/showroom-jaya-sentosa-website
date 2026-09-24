@@ -55,7 +55,7 @@ const Home = () => {
           <div className="p-8 bg-slate-900 text-white rounded-[40px]">
             <h3 className="text-2xl font-bold mb-4">Syarat Mudah</h3>
             <p className="text-slate-400 mb-6 italic">Cukup KTP & KK, proses survei cepat.</p>
-            <Link to="/syarat" className="text-red-500 font-bold uppercase text-xs tracking-widest">Baca Selengkapnya</Link>
+            <Link to="/syarat" className="bg-white text-red-500 font-bold uppercase text-xs tracking-widest">Baca Selengkapnya</Link>
           </div>
           <div className="p-8 bg-red-600 text-white rounded-[40px]">
             <h3 className="text-2xl font-bold mb-4">Hubungi Kami</h3>
@@ -64,6 +64,31 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* --- FITUR BARU: BANNER PROMOSI JSG WIFI --- */}
+      <section className="pb-20 px-6">
+        <div className="max-w-7xl mx-auto bg-gradient-to-r from-slate-900 to-slate-800 rounded-[40px] p-10 md:p-14 flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl">
+          <div className="text-left">
+            <h2 className="text-3xl md:text-4xl font-black text-white italic mb-4 uppercase">
+              Butuh Koneksi <span className="text-red-500">WiFi Cepat?</span>
+            </h2>
+            <p className="text-slate-300 md:text-lg max-w-xl">
+              Selain motor impian, Jaya Sentosa Group juga menghadirkan layanan internet rumah tanpa batas. Nikmati koneksi stabil dengan penawaran terbaik dari JSG WiFi!
+            </p>
+          </div>
+          <div className="shrink-0 w-full md:w-auto">
+            <a 
+              href="https://wifi-jaya-sentosa-website.vercel.app/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex w-full md:w-auto justify-center px-8 py-4 bg-red-600 text-white font-black uppercase tracking-widest text-xs md:text-sm rounded-2xl hover:bg-red-700 transition-all shadow-lg shadow-red-500/30 hover:-translate-y-1"
+            >
+              Kunjungi JSG WiFi →
+            </a>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 };
